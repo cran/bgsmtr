@@ -1,0 +1,7 @@
+66fe63ca67777891f6b110808117725f *DESCRIPTION
+cc1930d782508d2acdd065046f75773f *NAMESPACE
+9954ad9d5f4dacf5950119c2c7723c1d *R/all_functions.R
+c795d496e68f1778863d8d685ba6df66 *R/example-data.R
+5d2a45e7e2af5d4c9e7b3057776b246f *data/bgsmtr_example_data.RData
+b53d8e4155ef543ff0543766732389bc *man/bgsmtr.Rd
+37dc50e9ada812853b69a5b4173241e9 *man/bgsmtr_example_data.Rd
