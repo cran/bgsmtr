@@ -5,8 +5,8 @@
 \title{Spatial Bayesian Group Sparse Multi-Task Regression for Imaging Genetics}
 \usage{
 sp_bgsmtr(X, Y, method = "MCMC", rho = NULL, lambdasq = NULL,
-  alpha = NULL, A = NULL, FDR_opt = TRUE, WAIC_opt = TRUE,
-  iter_num = 10000, burn_in = 5001)
+  alpha = NULL, A = NULL, c.star = NULL, FDR_opt = TRUE,
+  WAIC_opt = TRUE, iter_num = 10000, burn_in = 5001)
 }
 \arguments{
 \item{X}{A d-by-n matrix; d is the number of SNPs and n is the number of subjects. Each row of X should correspond to a particular SNP
@@ -27,6 +27,8 @@ variance prior to running the Gibbs sampling algorithm.}
 \item{alpha}{Bayesian False Discovery Rate (FDR) level. Default level is 0.05.}
 
 \item{A}{A c/2 by c/2 neighborhood structure matrix for different brain regions.}
+
+\item{c.star}{The threshold for computing posterior tail probabilities p_{ij} for Bayesian FDR as defined in Section 3.2 of Song et al. (2018). If not specified the default is to set this threshold as the minimum posterior standard deviation, where the minimum is taken over all regression coefficients in the model.}
 
 \item{FDR_opt}{A logical operator for computing Bayesian FDR. By default, it's TRUE.}
 
@@ -62,9 +64,7 @@ matrix W, where the ij-th element of W represents the association between the i-
 
 -Gibbs_W_summaries$W_97.5_quantile is a d-by-c matrix giving the posterior 97.5 percent quantile for each element of W.'}
 
-\item{FDR_summaries}{A list with four components providing the summaries for estimated Bayesian FDR results for both MCMC and MFVB methods. Details for Bayesian FDR computation could be found at Morris et al.(2008).
-
--fdr_rate is the estimated bayesian FDR rate for each region.
+\item{FDR_summaries}{A list with three components providing the summaries for estimated Bayesian FDR results for both MCMC and MFVB methods. Details for Bayesian FDR computation could be found at Morris et al.(2008).
 
 -sensitivity_rate is the estimated sensitivity rate for each region.
 

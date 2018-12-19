@@ -736,8 +736,8 @@ bgsmtr.cv.mode = function( X, Y, group, iter_num = 10000, burn_in = 5001){
 # Spatial Bayesian Group Sparse Multi-Task Regression model with mean field variational bayes method.
 # Spatial Bayesian Group Sparse Multi-Task Regression model with mean field variational bayes method.
 sp_bgsmtr_mfvb = function(X, Y, rho = NULL, lambdasq = NULL,
-                          alpha = NULL, A = NULL, FDR_opt = TRUE,
-                          iter_num = 10000)
+                          alpha = NULL, A = NULL, c.star = NULL,
+                          FDR_opt = TRUE,iter_num = 10000 )
 {
   # Bayesian Group Sparse Multi-Task Regression Model with MCMC method
   #
@@ -1187,9 +1187,13 @@ sp_bgsmtr_mfvb = function(X, Y, rho = NULL, lambdasq = NULL,
       min_std[j] = min(apply(temp,MARGIN = 2, sd))
     }
 
-    for(j in 1:d){
+    if(is.null(c.star))
+    {
+      c.star = min(min_std)
+    }
 
-      W_est[1:iter_num,1:p,j] =  apply(W_est[1:iter_num,1:p,j], MARGIN = 2, function(x)  x > min(min_std))
+    for(j in 1:d){
+      W_est[1:iter_num,1:p,j] = apply(W_est[1:iter_num,1:p,j], MARGIN = 2, function(x)  x > c.star)
       prob[j,] = apply( W_est[1:iter_num,1:p,j], MARGIN = 2, sum)/n
     }
 
@@ -1225,7 +1229,7 @@ sp_bgsmtr_mfvb = function(X, Y, rho = NULL, lambdasq = NULL,
     phi_v = phi_v[-1]
     phi_a = phi_a[-1]
     fdr_vb_result=list(
-      fdr_rate = fdr_rate,
+      # fdr_rate = fdr_rate,
       sensitivity_rate = sensitivity_rate,
       specificity_rate = specificity_rate,
       significant_snp_idx = significant_snp_idx)
@@ -1245,8 +1249,8 @@ sp_bgsmtr_mfvb = function(X, Y, rho = NULL, lambdasq = NULL,
 }
 # Spatial Bayesian Group Sparse Multi-Task Regression model with Gibbs Sampling method
 sp_bgsmtr_mcmc = function(X, Y, rho = NULL, lambdasq = NULL, alpha = NULL,
-                          A = NULL, FDR_opt = TRUE,WAIC_opt = TRUE,
-                          iter_num = 10000, burn_in=5001){
+                          A = NULL, c.star = NULL, FDR_opt = TRUE,
+                          WAIC_opt = TRUE, iter_num = 10000, burn_in=5001){
 
   # Bayesian Group Sparse Multi-Task Regression Model with MCMC method.
   #
@@ -1261,7 +1265,7 @@ sp_bgsmtr_mcmc = function(X, Y, rho = NULL, lambdasq = NULL, alpha = NULL,
   #   WAIC_opt: logical operator for computing WAIC.
   #   iter_num: Number of iterations for Gibbs sampling.
   #   burn_in: index for burn in.
-  #
+  #   c.star: the threshold for computing posterior tail probabilities p_{ij} for       Bayesian FDR as defined in Section 3.2 of Song et al. (2018). If not             specified the default is to set this threshold as the minimum posterior          standard deviation, where the minimum is taken over all regression               coefficients in the model.
   # Output:
   #   Gibbs_W_summaries: posterior distribution summaries for W.
   #   FDR_summaries: Bayesian FDR summaries result, which includes significant SNPs,            specficit       y and sensitivity rate for each region.
@@ -1472,7 +1476,7 @@ sp_bgsmtr_mcmc = function(X, Y, rho = NULL, lambdasq = NULL, alpha = NULL,
 
   for (iter in 1:(iter_num-1)){
 
-    stm_iter = proc.time()
+    #stm_iter = proc.time()
 
     # Update each W^k from MVN full conditional
 
@@ -1640,7 +1644,10 @@ sp_bgsmtr_mcmc = function(X, Y, rho = NULL, lambdasq = NULL, alpha = NULL,
 
   if (FDR_opt){
     # By default, c.star=min(c(W_post_sd))
-    c.star = min(c(W_post_sd))
+    if(is.null(c.star))
+      {
+      c.star = min(c(W_post_sd))
+      }
     # 1. Compute p_{ij}
     P.m = matrix(NA,d,p)
     for(i in 1:d){
@@ -1681,7 +1688,7 @@ sp_bgsmtr_mcmc = function(X, Y, rho = NULL, lambdasq = NULL, alpha = NULL,
     phi_v = phi_v[-1]
     phi_a = phi_a[-1]
     fdr_mcmc_result=list(
-                         fdr_rate = fdr_rate,
+                        # fdr_rate = fdr_rate,
                          sensitivity_rate = sensitivity_rate,
                          specificity_rate = specificity_rate,
                          significant_snp_idx = significant_snp_idx)
@@ -1846,6 +1853,7 @@ bgsmtr = function(X, Y, group, tuning = 'CV.mode', lam_1_fixed = NULL, lam_2_fix
 #' @param rho spatial cohesion paramter. If no value has been assigned to it, it takes 0.8 by default.
 #' @param alpha Bayesian False Discovery Rate (FDR) level. Default level is 0.05.
 #' @param A A c/2 by c/2 neighborhood structure matrix for different brain regions.
+#' @param c.star The threshold for computing posterior tail probabilities p_{ij} for Bayesian FDR as defined in Section 3.2 of Song et al. (2018). If not specified the default is to set this threshold as the minimum posterior standard deviation, where the minimum is taken over all regression coefficients in the model.
 #' @param FDR_opt A logical operator for computing Bayesian FDR. By default, it's TRUE.
 #' @param WAIC_opt A logical operator for computing WAIC from MCMC method. By default, it's TRUE.
 #' @param iter_num Positive integer representing the total number of iterations to run the Gibbs sampler. Defaults to 10,000.
@@ -1875,9 +1883,7 @@ bgsmtr = function(X, Y, group, tuning = 'CV.mode', lam_1_fixed = NULL, lam_2_fix
 #'
 #' -Gibbs_W_summaries$W_97.5_quantile is a d-by-c matrix giving the posterior 97.5 percent quantile for each element of W.'}
 #'
-#' \item{FDR_summaries}{A list with four components providing the summaries for estimated Bayesian FDR results for both MCMC and MFVB methods. Details for Bayesian FDR computation could be found at Morris et al.(2008).
-#'
-#' -fdr_rate is the estimated bayesian FDR rate for each region.
+#' \item{FDR_summaries}{A list with three components providing the summaries for estimated Bayesian FDR results for both MCMC and MFVB methods. Details for Bayesian FDR computation could be found at Morris et al.(2008).
 #'
 #' -sensitivity_rate is the estimated sensitivity rate for each region.
 #'
@@ -1944,29 +1950,33 @@ bgsmtr = function(X, Y, group, tuning = 'CV.mode', lam_1_fixed = NULL, lam_2_fix
 #'}
 #'
 #'
-#' @import Matrix Rcpp mvtnorm TargetScore miscTools matrixcalc
+#' @import Matrix Rcpp mvtnorm miscTools matrixcalc
 #' @importFrom LaplacesDemon rinvwishart rwishart
 #' @importFrom sparseMVN rmvn.sparse
 #' @importFrom inline cxxfunction
 #' @importFrom statmod rinvgauss
+#' @importFrom TargetScore logmvgamma
 #' @importFrom EDISON rinvgamma
 #' @importFrom coda mcmc
 #' @importFrom mnormt dmnorm
 #' @importFrom methods  signature
 #' @importFrom stats cor sd var
 #' @export
-sp_bgsmtr = function(X, Y, method = "MCMC", rho = NULL, lambdasq = NULL, alpha = NULL, A = NULL, FDR_opt = TRUE, WAIC_opt = TRUE, iter_num = 10000, burn_in=5001)
+sp_bgsmtr = function(X, Y, method = "MCMC", rho = NULL, lambdasq = NULL,
+                     alpha = NULL, A = NULL, c.star = NULL, FDR_opt = TRUE,
+                     WAIC_opt = TRUE, iter_num = 10000, burn_in=5001)
 {
     if(method == 'MCMC')
     {
        result = sp_bgsmtr_mcmc(X, Y, rho = rho, lambdasq = lambdasq,
-                               alpha = alpha,A = A, FDR_opt = TRUE,
-                               WAIC_opt = TRUE,iter_num = iter_num, burn_in = burn_in)
+                               alpha = alpha, A = A, c.star = c.star,
+                               FDR_opt = TRUE, WAIC_opt = TRUE,
+                               iter_num = iter_num,burn_in = burn_in)
     }
     else{
      result = sp_bgsmtr_mfvb(X, Y, rho = rho, lambdasq = lambdasq,
-                             alpha = alpha, A = A, FDR_opt = TRUE,
-                             iter_num = iter_num)
+                             alpha = alpha, A = A,c.star = c.star,
+                             FDR_opt = TRUE, iter_num = iter_num)
 
    }
   return(result)
