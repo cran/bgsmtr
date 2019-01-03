@@ -1,6 +1,6 @@
-0ea9c9cfe6374be8dd012afd2343924b *DESCRIPTION
-c26c491461359b08c60b39b668d30be6 *NAMESPACE
-e83d5e5128a70eb9358829eae12dad64 *R/all_functions.R
+e89ddbb8832598c281f7c471b0c0c19f *DESCRIPTION
+426c55731ac327ca4619dd1f425c25dd *NAMESPACE
+c94ee622a129340ac7ca39bd8554354b *R/all_functions.R
 e2f496588f86603df3eae5553347081d *R/example-data.R
 e782aa799e7db911afab5be70df8f1fb *R/sp_example-data.R
 cac68d47b0bffc9f0e5087ebc5a30520 *data/bgsmtr_example_data.RData

@@ -1950,12 +1950,11 @@ bgsmtr = function(X, Y, group, tuning = 'CV.mode', lam_1_fixed = NULL, lam_2_fix
 #'}
 #'
 #'
-#' @import Matrix Rcpp mvtnorm miscTools matrixcalc
+#' @import Matrix Rcpp TargetScore mvtnorm miscTools matrixcalc
 #' @importFrom LaplacesDemon rinvwishart rwishart
 #' @importFrom sparseMVN rmvn.sparse
 #' @importFrom inline cxxfunction
 #' @importFrom statmod rinvgauss
-#' @importFrom TargetScore logmvgamma
 #' @importFrom EDISON rinvgamma
 #' @importFrom coda mcmc
 #' @importFrom mnormt dmnorm
