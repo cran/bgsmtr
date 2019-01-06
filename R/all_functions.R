@@ -1128,7 +1128,7 @@ sp_bgsmtr_mfvb = function(X, Y, rho = NULL, lambdasq = NULL,
       LB_qlog_2 = 1/2*( log(qeta_lambda[i]) - log(2*pi)) - log(qomega_mu[i]) - 1 / (2*qomega_mu[i]) *qomega_var[i] - qeta_lambda[i]*((qeta_mu[i] - 2) / (2*qeta_mu[i]^2) + qomega_mu[i] /2)
     }
 
-    LB_qlog_3 = qsigma_v/2*log(det(qsigma_S)) - qsigma_v*log(2) - logmvgamma((qsigma_v/2), 2) - (qsigma_v+3)/2*log(det(qsigma_v*qsigma_S)) - 1/2*sum(diag( qsigma_S%*%(qsigma_v*solve(qsigma_S))))
+    LB_qlog_3 = qsigma_v/2*log(det(qsigma_S)) - qsigma_v*log(2) - lmvgamma((qsigma_v/2), 2) - (qsigma_v+3)/2*log(det(qsigma_v*qsigma_S)) - 1/2*sum(diag( qsigma_S%*%(qsigma_v*solve(qsigma_S))))
 
     # LB_qlog_4 = qlambda_alpha*log(qlambda_beta) - log(gamma(qlambda_alpha)) - (qlambda_alpha +1)*(digamma(qlambda_alpha) - log(qlambda_beta))- qlambda_beta*(qlambda_beta/(qlambda_alpha -1) )
 
@@ -1950,7 +1950,7 @@ bgsmtr = function(X, Y, group, tuning = 'CV.mode', lam_1_fixed = NULL, lam_2_fix
 #'}
 #'
 #'
-#' @import Matrix Rcpp TargetScore mvtnorm miscTools matrixcalc
+#' @import Matrix Rcpp CholWishart mvtnorm miscTools matrixcalc
 #' @importFrom LaplacesDemon rinvwishart rwishart
 #' @importFrom sparseMVN rmvn.sparse
 #' @importFrom inline cxxfunction
@@ -1958,7 +1958,7 @@ bgsmtr = function(X, Y, group, tuning = 'CV.mode', lam_1_fixed = NULL, lam_2_fix
 #' @importFrom EDISON rinvgamma
 #' @importFrom coda mcmc
 #' @importFrom mnormt dmnorm
-#' @importFrom methods  signature
+#' @importFrom methods signature
 #' @importFrom stats cor sd var
 #' @export
 sp_bgsmtr = function(X, Y, method = "MCMC", rho = NULL, lambdasq = NULL,

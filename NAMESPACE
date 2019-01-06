@@ -2,9 +2,9 @@
 
 export(bgsmtr)
 export(sp_bgsmtr)
+import(CholWishart)
 import(Matrix)
 import(Rcpp)
-import(TargetScore)
 import(matrixcalc)
 import(miscTools)
 import(mvtnorm)
