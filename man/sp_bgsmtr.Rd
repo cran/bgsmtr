@@ -2,11 +2,22 @@
 % Please edit documentation in R/all_functions.R
 \name{sp_bgsmtr}
 \alias{sp_bgsmtr}
-\title{Spatial Bayesian Group Sparse Multi-Task Regression for Imaging Genetics}
+\title{A Bayesian Spatial Model for Imaging Genetics}
 \usage{
-sp_bgsmtr(X, Y, method = "MCMC", rho = NULL, lambdasq = NULL,
-  alpha = NULL, A = NULL, c.star = NULL, FDR_opt = TRUE,
-  WAIC_opt = TRUE, iter_num = 10000, burn_in = 5001)
+sp_bgsmtr(
+  X,
+  Y,
+  method = "MCMC",
+  rho = NULL,
+  lambdasq = NULL,
+  alpha = NULL,
+  A = NULL,
+  c.star = NULL,
+  FDR_opt = TRUE,
+  WAIC_opt = TRUE,
+  iter_num = 10000,
+  burn_in = 5001
+)
 }
 \arguments{
 \item{X}{A d-by-n matrix; d is the number of SNPs and n is the number of subjects. Each row of X should correspond to a particular SNP
@@ -18,17 +29,17 @@ Y should correspond to a particular phenotype and each column should correspond 
 the measured value for the corresponding phentoype and subject. The function will center and scale each row of Y to have mean zero and unit
 variance prior to running the Gibbs sampling algorithm.}
 
-\item{method}{A string, either 'MCMC' or 'MFVB'. If 'MCMC', the Gibbs sampling method will be used. If 'MFVB', mean field variational bayes method will be used.}
+\item{method}{A string, either 'MCMC' or 'MFVB'. If 'MCMC', the Gibbs sampling method will be used. If 'MFVB', mean field variational Bayes method will be used.}
 
-\item{rho}{spatial cohesion paramter. If no value has been assigned to it, it takes 0.8 by default.}
+\item{rho}{Spatial cohesion paramter. If no value is assigned, it takes 0.8 by default.}
 
-\item{lambdasq}{A tuning paratmeter. If no value has beeen assigned to it, it takes 1000 by default.}
+\item{lambdasq}{A tuning paratmeter. If no value is assigned, the algorithm will estimate and assign a value for it based on a moment estimate.}
 
 \item{alpha}{Bayesian False Discovery Rate (FDR) level. Default level is 0.05.}
 
 \item{A}{A c/2 by c/2 neighborhood structure matrix for different brain regions.}
 
-\item{c.star}{The threshold for computing posterior tail probabilities p_{ij} for Bayesian FDR as defined in Section 3.2 of Song et al. (2018). If not specified the default is to set this threshold as the minimum posterior standard deviation, where the minimum is taken over all regression coefficients in the model.}
+\item{c.star}{The threshold for computing posterior tail probabilities p_{ij} for Bayesian FDR as defined in Section 3.2 of  Song, Ge et al.(2019). If not specified the default is to set this threshold as the minimum posterior standard deviation, where the minimum is taken over all regression coefficients in the model.}
 
 \item{FDR_opt}{A logical operator for computing Bayesian FDR. By default, it's TRUE.}
 
@@ -39,10 +50,11 @@ variance prior to running the Gibbs sampling algorithm.}
 \item{burn_in}{Nonnegative integer representing the number of MCMC samples to discard as burn-in. Defaults to 5001.}
 }
 \value{
-A list with the elements
+A list with following elements
 \item{WAIC}{WAIC is computed from the MCMC output if "MCMC" is chosen for method.}
 \item{lower_boud}{Lower bound from MFVB output if "MFVB is choosen for method.}
 \item{Gibbs_setup}{A list providing values for the input parameters of the function.}
+ \item{lambdasq_est}{Estimated value for tunning parameter lambda-squared.}
 \item{Gibbs_W_summaries}{A list with five components, each component being a d-by-c matrix giving some posterior summary of the regression parameter
 matrix W, where the ij-th element of W represents the association between the i-th SNP and j-th phenotype.
 
@@ -86,7 +98,7 @@ matrix W, where the ij-th element of W represents the association between the i-
 }
 }
 \description{
-Bayesian Group Sparse Multi-Task Regression that allows for two types of correlation typically seen in structural brain imaging data. First, the spatial correlation in the imaging phenotypes obtained from neighbouring regions of the brain. Second, the correlation between corresponding measures on opposite hemispheres.
+Fits a Bayesian spatial model that allows for two types of correlation typically seen in structural brain imaging data. First, the spatial correlation in the imaging phenotypes obtained from neighbouring regions of the brain. Second, the correlation between corresponding measures on opposite hemispheres.
 }
 \examples{
 data(sp_bgsmtr_example_data)
@@ -99,8 +111,8 @@ names(sp_bgsmtr_example_data)
 
 fit_mcmc = sp_bgsmtr(X = sp_bgsmtr_example_data$SNP_data,
 Y = sp_bgsmtr_example_data$BrainMeasures, method = "MCMC",
-A = bgsmtr_example_data$neighborhood_structure, rho = 0.8,
-FDR_opt = TRUE, WAIC_opt = TRUE,lambdasq = 1000, iter_num = 10000.)
+A = sp_bgsmtr_example_data$neighborhood_structure, rho = 0.8,
+FDR_opt = TRUE, WAIC_opt = TRUE,lambdasq = 1000, iter_num = 10000)
 
 # MCMC estimation results for regression parameter W and estimated Bayesian FDR summaries
 
@@ -115,8 +127,8 @@ fit_mcmc$WAIC
 
 fit_mfvb = sp_bgsmtr(X = sp_bgsmtr_example_data$SNP_data,
 Y = sp_bgsmtr_example_data$BrainMeasures, method = "MFVB",
-A = bgsmtr_example_data$neighborhood_structure, rho = 0.8,FDR_opt = TRUE,
-lambdasq = 1000, iter_num = 10000.)
+A = sp_bgsmtr_example_data$neighborhood_structure, rho = 0.8,FDR_opt = FALSE,
+lambdasq = 1000, iter_num = 10000)
 
 # MFVB estimated results for regression parameter W and estimated Bayesian FDR summaries
 fit_mfvb$MFVB_summaries
@@ -127,14 +139,18 @@ fit_mfvb$lower_boud
 
 }
 
-
+}
+\references{
+Song, Y., Ge, S., Cao, J., Wang, L., Nathoo, F.S., A Bayesian Spatial Model for Imaging Genetics. arXiv:1901.00068.
 }
 \author{
 Yin Song, \email{yinsong@uvic.ca}
 
-Shufei Ge \email{shufeig@sfu.ca}
+Shufei Ge, \email{shufeig@sfu.ca}
 
 Farouk S. Nathoo, \email{nathoo@uvic.ca}
 
-Liangliang Wang \email{lwa68@sfu.ca}
+Liangliang Wang, \email{lwa68@sfu.ca}
+
+Jiguo Cao, \email{jiguo_cao@sfu.ca}
 }

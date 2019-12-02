@@ -4,8 +4,16 @@
 \alias{bgsmtr}
 \title{Bayesian Group Sparse Multi-Task Regression for Imaging Genetics}
 \usage{
-bgsmtr(X, Y, group, tuning = "CV.mode", lam_1_fixed = NULL,
-  lam_2_fixed = NULL, iter_num = 10000, burn_in = 5001)
+bgsmtr(
+  X,
+  Y,
+  group,
+  tuning = "CV.mode",
+  lam_1_fixed = NULL,
+  lam_2_fixed = NULL,
+  iter_num = 10000,
+  burn_in = 5001
+)
 }
 \arguments{
 \item{X}{A d-by-n matrix; d is the number of SNPs and n is the number of subjects. Each row of X should correspond to a particular SNP
@@ -93,7 +101,7 @@ fit$Gibbs_W_summaries$W_post_mean[100,14]
 fit$Gibbs_W_summaries$W_post_mode[100,14]
 ## posterior standard deviation for regression parameter relating 100th SNP to 14th phenotype
 fit$Gibbs_W_summaries$W_post_sd[100,14]
-## 95\% equal-tail credible interval for regression parameter relating 100th SNP to 14th phenotype
+## 95% equal-tail credible interval for regression parameter relating 100th SNP to 14th phenotype
 c(fit$Gibbs_W_summaries$W_2.5_quantile[100,14],fit$Gibbs_W_summaries$W_97.5_quantile[100,14])
 }
 
@@ -113,7 +121,7 @@ Nathoo, Farouk S., Keelin Greenlaw, and Mary Lesperance. "Regularization Paramet
 \author{
 Farouk S. Nathoo, \email{nathoo@uvic.ca}
 
-Keelin Greenlaw  \email{keelingreenlaw@gmail.com}
+Keelin Greenlaw,  \email{keelingreenlaw@gmail.com}
 
-Mary Lesperance  \email{mlespera@uvic.ca}
+Mary Lesperance, \email{mlespera@uvic.ca}
 }
