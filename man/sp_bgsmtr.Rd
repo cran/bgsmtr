@@ -31,7 +31,7 @@ variance prior to running the Gibbs sampling algorithm.}
 
 \item{method}{A string, either 'MCMC' or 'MFVB'. If 'MCMC', the Gibbs sampling method will be used. If 'MFVB', mean field variational Bayes method will be used.}
 
-\item{rho}{Spatial cohesion paramter. If no value is assigned, it takes 0.8 by default.}
+\item{rho}{Spatial cohesion paramter. If no value is assigned, it takes 0.95 by default.}
 
 \item{lambdasq}{A tuning paratmeter. If no value is assigned, the algorithm will estimate and assign a value for it based on a moment estimate.}
 

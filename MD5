@@ -1,12 +1,12 @@
-32dc065f67cc01e91acfa1174028ec26 *DESCRIPTION
+1f7ab17bcc038ac752c7b4b74406c359 *DESCRIPTION
 1eccfbd09a0e0a100ac1f57e8ff95c4c *NAMESPACE
-f3de3de6e8a79e07b0f4068369a612c2 *R/all_functions.R
+4c0b870cfed6f58556905b803a596b44 *R/all_functions.R
 e2f496588f86603df3eae5553347081d *R/example-data.R
 61dc8891d0758be80cada0ba4be7b1da *R/sp_example-data.R
 cac68d47b0bffc9f0e5087ebc5a30520 *data/bgsmtr_example_data.RData
 88983741d7a67eb42a62434e6bdb9dad *data/sp_bgsmtr_example_data.RData
 d59d7456e40891da90d7c9d3582c478e *man/bgsmtr.Rd
 bc23c4806bce5ed1d03000d7371db0ae *man/bgsmtr_example_data.Rd
-f9ae5ce61c6868e21c4f2ffc21444668 *man/sp_bgsmtr.Rd
+f1a486247ef2bb23d9c06c3ee1822d11 *man/sp_bgsmtr.Rd
 3d5058f39968bff7c3c94654e2b7e5bc *man/sp_bgsmtr_example_data.Rd
 d6adee236166b0803d113f62c1a04969 *man/sp_bgsmtr_path.Rd

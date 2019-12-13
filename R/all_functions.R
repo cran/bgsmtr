@@ -875,7 +875,7 @@ sp_bgsmtr_mfvb = function(X, Y,  rho = NULL, lambdasq = NULL, alpha = NULL,  A =
   }
 
   if (is.null(rho)) {
-    rho = 0.8
+    rho = 0.95
   }
 
 
@@ -1476,7 +1476,7 @@ sp_bgsmtr_mcmc = function(X, Y, rho = NULL, lambdasq = NULL, alpha = NULL, A = N
   }
 
   if (is.null(rho)) {
-    rho = 0.8
+    rho = 0.95
   }
 
 
@@ -2195,7 +2195,7 @@ bgsmtr = function(X,Y,group,tuning = 'CV.mode', lam_1_fixed = NULL, lam_2_fixed 
 #' variance prior to running the Gibbs sampling algorithm.
 #' @param method A string, either 'MCMC' or 'MFVB'. If 'MCMC', the Gibbs sampling method will be used. If 'MFVB', mean field variational Bayes method will be used.
 #' @param lambdasq A tuning paratmeter. If no value is assigned, the algorithm will estimate and assign a value for it based on a moment estimate.
-#' @param rho Spatial cohesion paramter. If no value is assigned, it takes 0.8 by default.
+#' @param rho Spatial cohesion paramter. If no value is assigned, it takes 0.95 by default.
 #' @param alpha Bayesian False Discovery Rate (FDR) level. Default level is 0.05.
 #' @param A A c/2 by c/2 neighborhood structure matrix for different brain regions.
 #' @param c.star The threshold for computing posterior tail probabilities p_{ij} for Bayesian FDR as defined in Section 3.2 of  Song, Ge et al.(2019). If not specified the default is to set this threshold as the minimum posterior standard deviation, where the minimum is taken over all regression coefficients in the model.
@@ -2268,7 +2268,7 @@ bgsmtr = function(X,Y,group,tuning = 'CV.mode', lam_1_fixed = NULL, lam_2_fixed 
 #'
 #' fit_mcmc = sp_bgsmtr(X = sp_bgsmtr_example_data$SNP_data,
 #' Y = sp_bgsmtr_example_data$BrainMeasures, method = "MCMC",
-#' A = sp_bgsmtr_example_data$neighborhood_structure, rho = 0.8,
+#' A = sp_bgsmtr_example_data$neighborhood_structure, rho = 0.95,
 #' FDR_opt = TRUE, WAIC_opt = TRUE,lambdasq = 1000, iter_num = 10000)
 #'
 #' # MCMC estimation results for regression parameter W and estimated Bayesian FDR summaries
@@ -2284,7 +2284,7 @@ bgsmtr = function(X,Y,group,tuning = 'CV.mode', lam_1_fixed = NULL, lam_2_fixed 
 #'
 #' fit_mfvb = sp_bgsmtr(X = sp_bgsmtr_example_data$SNP_data,
 #' Y = sp_bgsmtr_example_data$BrainMeasures, method = "MFVB",
-#' A = sp_bgsmtr_example_data$neighborhood_structure, rho = 0.8,FDR_opt = FALSE,
+#' A = sp_bgsmtr_example_data$neighborhood_structure, rho = 0.95,FDR_opt = FALSE,
 #' lambdasq = 1000, iter_num = 10000)
 #'
 #' # MFVB estimated results for regression parameter W and estimated Bayesian FDR summaries
